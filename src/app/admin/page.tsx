@@ -62,6 +62,16 @@ const AdminDashboard = async () => {
         subtitle={`${formatNumber(userData.averageValuePerUser)} Inactive`}
         body={formatCurrency(userData.userCount)}
       />
+      {/* <DashboardCard
+        title="Active Products"
+        subtitle={`${formatNumber(userData.averageValuePerUser)} Inactive`}
+        body={formatCurrency(userData.userCount)}
+      />
+      <DashboardCard
+        title="Active Products"
+        subtitle={`${formatNumber(userData.averageValuePerUser)} Inactive`}
+        body={formatCurrency(userData.userCount)}
+      /> */}
     </div>
   );
 };
