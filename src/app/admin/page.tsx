@@ -7,17 +7,23 @@ import {
 } from "@/components/ui/card";
 import db from "@/db/db";
 import { formatCurrency, formatNumber } from "@/lib/formatters";
+import { resolve } from "path";
 
 async function getSalesData() {
   const data = await db.order.aggregate({
     _sum: { pricePaidInCents: true },
     _count: true,
   });
+  await wait(2000);
 
   return {
     amount: (data._sum.pricePaidInCents || 0) / 100,
     numberOfSales: data._count,
   };
+}
+
+function wait(duration: number) {
+  return new Promise((resolve) => setTimeout(resolve, duration));
 }
 
 async function getUserData() {
@@ -37,12 +43,20 @@ async function getUserData() {
   };
 }
 
-async function getProductData() {}
+async function getProductData() {
+  const [activeCount, inactiveCount] = await Promise.all([
+    db.product.count({ where: { isAvailableForPurchase: true } }),
+    db.product.count({ where: { isAvailableForPurchase: false } }),
+  ]);
+
+  return { activeCount, inactiveCount };
+}
 
 const AdminDashboard = async () => {
-  const [salesData, userData] = await Promise.all([
+  const [salesData, userData, productData] = await Promise.all([
     getSalesData(),
     getUserData(),
+    getProductData(),
   ]);
 
   return (
@@ -60,18 +74,8 @@ const AdminDashboard = async () => {
       <DashboardCard
         title="Active Products"
         subtitle={`${formatNumber(userData.averageValuePerUser)} Inactive`}
-        body={formatCurrency(userData.userCount)}
+        body={formatNumber(productData.activeCount)}
       />
-      {/* <DashboardCard
-        title="Active Products"
-        subtitle={`${formatNumber(userData.averageValuePerUser)} Inactive`}
-        body={formatCurrency(userData.userCount)}
-      />
-      <DashboardCard
-        title="Active Products"
-        subtitle={`${formatNumber(userData.averageValuePerUser)} Inactive`}
-        body={formatCurrency(userData.userCount)}
-      /> */}
     </div>
   );
 };
