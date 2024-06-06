@@ -19,9 +19,9 @@ async function isAuthenticated(req: NextRequest) {
     .split(":")
     console.log(username, password)
 
-    isValidPassword(password, "sdfdsa")
-    return false
-    //return username === process.env.ADMIN_USERNAME && (await isValidPassword(password, process.env.HASHED_ADMIN_PASSWORD as string))
+    // isValidPassword(password, "sdfdsa")
+    // return false
+    return username === process.env.ADMIN_USERNAME && (await isValidPassword(password, process.env.HASHED_ADMIN_PASSWORD as string))
 
 }
 
