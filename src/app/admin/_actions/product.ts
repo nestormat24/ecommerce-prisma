@@ -64,7 +64,7 @@ export async function deleteProduct(id: string) {
   if (product == null) return notFound();
 
   await fs.unlink(product.filePath);
-  await fs.unlink(`punlic${product.imagePath}`);
+  await fs.unlink(`public${product.imagePath}`);
 }
 
 const editSchema = addSchema.extend({
